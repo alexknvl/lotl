@@ -6,7 +6,7 @@ I am doing this project as a part of my OSU CSE 6341 course (http://web.cse.ohio
 I decided to use parser combinators instead of hand-writing LL(1) or recursive-descent parser because this seemed simpler and a lot more fun. This of course means that I borrowed quite a few ideas from [1, 2, 3]. Furthermore, I borrowed function names and some ideas (e.g. using `case class ~[+A, +B]` for pattern matching) from Scala Standard Parser Combinator Library [4], and I used `MonadPlus`, `Show`, `ReaderT`, `StateT` and associated functions from Scalaz library [5].
 
 That said, most of the code is extremely simple and concise.
-* `SimpleRegexps.scala` is a simple Brzozowski derivative based regular expression matcher. **Not used anywhere really, I wrote it just for fun**.
+* `SimpleRegexps.scala` is a simple Brzozowski derivative [11] based regular expression matcher. I pretty much followed [12] while implementing it. I plan to add other derivatives using McBride's dissection [13] and implement group capture / reductions later on. **Not used anywhere really, just for fun**.
 * `Combinators.scala` provides parser combinators used in `Parser.scala`.
 * `AST.scala` describes the internal representation used for S-expressions.
 * `Parser.scala` describes a parser for S-expressions.
@@ -157,3 +157,6 @@ Although monadic parser combinators provide us with an amazing way to write easi
 For The Real World. 2001
 9. John Hughes. Generalizing monads to arrows. 2000.
 10. S. Doaitse Swierstra. Parser combinators: from toys to tools. 2000.
+11. http://en.wikipedia.org/wiki/Brzozowski_derivative
+12. http://www.mpi-sws.org/~turon/re-deriv.pdf
+13. http://strictlypositive.org/Dissect.pdf
