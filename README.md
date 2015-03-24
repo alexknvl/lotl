@@ -1,10 +1,12 @@
 # "Lord of the LISP" Interpreter Project
 
 ## Disclaimer
-I decided to use parser combinators instead of hand-writing LL(1) or recursive-descent parser because this seemed simpler and more fun. This of course means that I borrowed quite a few ideas from [1, 2, 3]. Furthermore, I borrowed function names and some ideas (e.g. using `case class ~[+A, +B]` for pattern matching) from Scala Standard Parser Combinator Library [4], and I used `MonadPlus`, `Show`, `ReaderT`, `StateT` and associated functions from Scalaz library [5].
+I am doing this project as a part of my OSU CSE 6341 course (http://web.cse.ohio-state.edu/~neelam/courses/755/).
+
+I decided to use parser combinators instead of hand-writing LL(1) or recursive-descent parser because this seemed simpler and a lot more fun. This of course means that I borrowed quite a few ideas from [1, 2, 3]. Furthermore, I borrowed function names and some ideas (e.g. using `case class ~[+A, +B]` for pattern matching) from Scala Standard Parser Combinator Library [4], and I used `MonadPlus`, `Show`, `ReaderT`, `StateT` and associated functions from Scalaz library [5].
 
 That said, most of the code is extremely simple and concise.
-* `SimpleRegexps.scala` is a very simple brzozowski-derivative based regular expression matcher (**Not used anywhere really, just for fun**).
+* `SimpleRegexps.scala` is a simple Brzozowski derivative based regular expression matcher. **Not used anywhere really, I wrote it just for fun**.
 * `Combinators.scala` provides parser combinators used in `Parser.scala`.
 * `AST.scala` describes the internal representation used for S-expressions.
 * `Parser.scala` describes a parser for S-expressions.
@@ -140,7 +142,7 @@ If you are interested in parser combinators, I suggest first reading [1, 2, 3], 
 Although monadic parser combinators provide us with an amazing way to write easily comprehensible grammars and parsers, they do have certain shortcomings:
 
 * They do not handle left-recursive grammars well. However, there is a very interesting paper [6] that describes an approach based on Brzozowski's derivatives that makes it possible to use left-recursive grammars. Also see [7].
-* Their composition operation (monadic bind) `Parser[E, A] => (A => Parser[E, B]) => Parser[E, B]` is a bit too powerful. Monadic parsers are capable of parsing context-sensitive grammars [8] and it is hard to statically analyze grammars [9]. However, it turns out that if we restrict parsers to Arrows instead of Monads this "problem" goes away [8, 9].
+* Their composition operation (monadic bind) `Parser[E, A] => (A => Parser[E, B]) => Parser[E, B]` is a bit too powerful. Monadic parsers are capable of parsing context-sensitive grammars [8] and the resulting parsers are hard to analyze during compile-time [9]. However, it turns out that if we restrict parsers to Arrows instead of Monads this "problem" goes away [8, 9].
 * It is not trivial to provide meaningful error messages [10].
 
 ## References
