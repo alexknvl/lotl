@@ -60,7 +60,76 @@ I implemented three different printing strategies:
     - `(1 . 2)` is printed as `(1 . 2)`
 
 ## Interpreter
-To be filled in...
+
+### Types
+Most special forms and functions may fail one way or another, so we need some way to represent possible failure. I encode this using a disjunction:
+```scala
+    type Result[+A] = \/[String, A]
+```
+
+Next, some of the forms in Lisp may modify global state (e.g. `DEFUN`) and most read it: 
+```scala
+    // This type encodes something that takes an environment Env 
+    // and returns some value. `ReaderT` (reader monad transformer) 
+    // is a very thin wrapper around `Env => Result[A]` provided by scalaz.
+    // For most purposes this type is equivalent to `Env => Result[A]`.
+    type PureEval[A] = ReaderT[Result, Env, A]
+
+    // This type encodes something that takes an environment Env 
+    // and returns some value together with a new environment. 
+    // `StateT` (reader monad transformer) is a very thin wrapper 
+    // around `Env => Result[(Env, A)]` provided by scalaz.
+    // For most purposes this type is equivalent to 
+    // `Env => Result[(Env, A)]`.
+    type Eval[A] = StateT[Result, Env, A]
+
+    // The environment. Contains all visible local variables, 
+    // user-defined and predefined functions, 
+    // pure and state-modyfing forms.
+    case class Env(locals: Map[Symbol, Expr], functions: Map[Symbol, PureForm],
+                   pureForms: Map[Symbol, PureForm], forms: Map[Symbol, Form])
+```
+
+Next, we add input parameters. I used partial functions to represent the fact that forms and functions only accept a certain number of arguments of certain types (and I regret this decision, there should be some better way).
+```scala
+    type =>?[-A, +B] = PartialFunction[A, B]
+    // For most purposes this type is equivalent to 
+    // `Expr =>? Env => Result[Expr]`
+    type PureForm = Expr =>? PureEval[Expr]
+    // `Expr =>? Env => Result[(Env, Expr)]`
+    type Form = Expr =>? Eval[Expr]
+```
+
+I decided to use the `PureForm` type for functions such as `CAR` and `PLUS` or user-defined function as well as for pure forms like `QUOTE`. Since many functions have a simpler type `Expr =>? Expr`, I defined a conversion operation:
+```scala
+    def lift(f: Expr =>? Expr): PureForm = new =>?[Expr, PureEval[Expr]] {
+      override def isDefinedAt(x: Expr): Boolean = f.isDefinedAt(x)
+      override def apply(v: Expr): PureEval[Expr] = PureEval { e => f(v).right}
+    }
+```
+
+### Basic Forms
+I implemented the following forms:
+```scala
+    // (QUOTE x)
+    val quote: PureForm
+    // (COND (A B) (T C))
+    val cond: PureForm
+    // (DEFUN F (a b) (PLUS a b))
+    val defun: Form
+    // Evaluates the given expression within the given environment.
+    // *Is not available from Lisp.* 
+    val eval: PureForm
+    // Evaluates the given expression within the given environment.
+    // Supports state-modyfing forms.
+    // *Is not available from Lisp.* 
+    val topEval: Form
+    // Resets the environment to the initial (clean) state.
+    def clear: Form
+    // Dumps the environment as a Lisp-expression.
+    // Can be used for debugging.
+    def dumpenv: PureForm
+```
 
 ## Appendix
 
