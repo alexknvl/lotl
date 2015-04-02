@@ -1,7 +1,7 @@
 # "Lord of the LISP" Interpreter Project
 
 ## Disclaimer
-This project is available on my [GitHub page](https://github.com/alexknvl/lotl). I did it as a part of my course on programming languages.
+I did this project as a part of my OSU CSE 6341 course (http://web.cse.ohio-state.edu/~neelam/courses/755/).
 
 I decided to use parser combinators instead of hand-writing LL(1) or recursive-descent parser because this seemed simpler and a lot more fun. This of course means that I borrowed quite a few ideas from [1, 2, 3]. Furthermore, I borrowed function names and some ideas (e.g. using `case class ~[+A, +B]` for pattern matching) from Scala Standard Parser Combinator Library [4], and I used `MonadPlus`, `Show`, `ReaderT`, `StateT` and associated functions from Scalaz library [5].
 
