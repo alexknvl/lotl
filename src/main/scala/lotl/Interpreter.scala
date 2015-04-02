@@ -85,7 +85,7 @@ trait BasicForms extends InterpreterTypes {
           eval(body)(env.withLocals(paramNames.zip(params)))
         }
       }
-      (env.withFunction(name -> func), name).right
+      (env.withFunction(name -> func), Atom(name)).right
     }
   }
 
