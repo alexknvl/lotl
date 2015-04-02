@@ -34,7 +34,7 @@ trait IteratorExtra {
 object Main extends IteratorExtra {
   def main(args: Array[String]): Unit = {
     val input =
-      if (args.size == 1) Source.fromFile(args(0))
+      if (args.length == 1) Source.fromFile(args(0))
       else Source.fromInputStream(System.in)
 
     var state = Interpreter.prelude
