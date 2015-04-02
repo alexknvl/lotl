@@ -1,3 +1,5 @@
+assemblyJarName in assembly := "lotl.jar"
+
 packSettings
 
 packMain := Map("lotl" -> "lotl.Main")

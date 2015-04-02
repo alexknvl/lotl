@@ -19,7 +19,7 @@ If you want, you can make it read a file `input.txt` by running:
 Or make a `.jar` file by running:
 
     sbt assembly
-    cp target/scala-2.11/lotl-assembly-0.1-SNAPSHOT.jar lotl.jar
+    cp target/scala-2.11/lotl.jar lotl.jar
 
 And then run this `lotl.jar` file:
 
