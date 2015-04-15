@@ -2,6 +2,7 @@ package lotl
 
 import lotl.Printers._
 import scala.io.Source
+import scala.language.higherKinds
 import scala.util.control.Breaks._
 import scalaz._
 
